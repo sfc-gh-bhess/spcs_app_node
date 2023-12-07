@@ -25,23 +25,24 @@ function get_options() {
 
 var connectionPool = null
 function getPool(poolOpts = {}) {
-    var min = 0
-    var max = 10
-    try {
-        if (poolOpts.min)
-            min = Number(poolOpts.min)
-        if (poolOpts.max)
-            max = Number(poolOpts.max)
-    }
-    catch (error) {
-        console.error("Invalid pool options")
-    }
+    if (!poolOpts.max)
+        poolOpts.max = 10
+    if (!poolOpts.testOnBorrow)
+        poolOpts.testOnBorrow = false
+
     if (connectionPool) {
         if ((connectionPool.min == min) && (connectionPool.max == max)) {
             return connectionPool
         }
     }
-    connectionPool = snowflake.createPool(get_options(), {max: max, min: min})
+
+    try {
+        connectionPool = snowflake.createPool(get_options(), {max: max, min: min})
+    }
+    catch (error) {
+        console.error("Error making connection pool: " + error.message)
+    }
+
     return connectionPool
 }
 
