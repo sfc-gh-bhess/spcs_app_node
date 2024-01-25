@@ -47,7 +47,7 @@ enabled.
 7. See that the service has started by executing `SHOW SERVICES IN COMPUTE POOL tutorial_compute_pool` 
    and `SELECT system$get_service_status('fullstack')`.
 8. Find the public endpoint for the service by executing `SHOW ENDPOINTS IN SERVICE fullstack`.
-9. Grant permissions for folks to visit the Streamlit. You do this by granting 
+9. (Optional) Grant permissions for folks to visit the Streamlit. You do this by granting 
    `USAGE` on the service: `GRANT USAGE ON SERVICE fullstack TO ROLE some_role`, 
    where you specify the role in place of `some_role`.
 10. Navigate to the endpoint and authenticate. Note, you must use a user whose
@@ -71,4 +71,4 @@ container. The variables to set are:
 
 Once those have been set, run the Streamlit container with `make run`. This will 
 use Docker Compose to start 3 containers to host the web app. Navigate
-to `http://localhost:8888`.
+to `http://localhost:8000`.

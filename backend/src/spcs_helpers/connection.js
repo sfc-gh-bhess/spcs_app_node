@@ -1,5 +1,6 @@
 const snowflake = require('snowflake-sdk')
 const fs = require("fs");
+const { connect } = require('http2');
 
 function get_options() {
     if (fs.existsSync("/snowflake/session/token")) {
@@ -25,19 +26,21 @@ function get_options() {
 
 var connectionPool = null
 function getPool(poolOpts = {}) {
+    if (!poolOpts.min)
+        poolOpts.min = connectionPool ? connectionPool.min : 1
     if (!poolOpts.max)
-        poolOpts.max = 10
+        poolOpts.max = connectionPool ? connectionPool.max : 10
     if (!poolOpts.testOnBorrow)
-        poolOpts.testOnBorrow = false
+        poolOpts.testOnBorrow = connectionPool ? connectionPool.testOnBorrow :false
 
     if (connectionPool) {
-        if ((connectionPool.min == min) && (connectionPool.max == max)) {
+        if ((connectionPool.min == poolOpts.min) && (connectionPool.max == poolOpts.max)) {
             return connectionPool
         }
     }
 
     try {
-        connectionPool = snowflake.createPool(get_options(), {max: max, min: min})
+        connectionPool = snowflake.createPool(get_options(), poolOpts)
     }
     catch (error) {
         console.error("Error making connection pool: " + error.message)
