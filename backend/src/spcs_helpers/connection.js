@@ -9,7 +9,9 @@ function get_options() {
             account: process.env.SNOWFLAKE_ACCOUNT,
             authenticator: 'OAUTH',
             token: fs.readFileSync('/snowflake/session/token', 'ascii'),
-        }
+            warehouse: process.env.SNOWFLAKE_WAREHOUSE,
+            clientSessionKeepAlive: true,
+       }
     }
     else {
         return {
